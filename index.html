@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>OTP Verification</h2>
+        <div class="form-group">
+            <label for="mobile">Mobile Number:</label>
+            <input type="text" id="mobile" placeholder="Enter your mobile number">
+        </div>
+        <div class="form-group">
+            <label for="otp">OTP:</label>
+            <input type="text" id="otp" placeholder="Enter OTP">
+        </div>
+        <button class="btn" onclick="sendOtp()">Send OTP</button>
+        <button class="btn" onclick="verifyOtp()">Verify OTP</button>
+    </div>
+
+    <script>
+        async function sendOtp() {
+            const mobile = document.getElementById('mobile').value;
+            const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a random 6-digit OTP
+
+            const response = await fetch('http://localhost:3000/send-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mobile, otp })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+        }
+
+        async function verifyOtp() {
+            const mobile = document.getElementById('mobile').value;
+            const otp = document.getElementById('otp').value;
+
+            const response = await fetch('http://localhost:3000/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mobile, otp })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+            console.log(otp)
+        }
+    </script>
+</body>
+</html>
